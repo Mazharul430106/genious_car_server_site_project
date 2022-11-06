@@ -8,23 +8,30 @@ require('dotenv').config();
 app.use(cors());
 app.use(express.json());
 
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qm6ghoc.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 const run = async ()=>{
     try{
         const productCollection = client.db('geniousCarDb').collection('products');
+        const servicesCollection = client.db('geniousCarDb').collection('services');
+
+        // get data from database
+        app.get('/services', async (req, res)=>{
+          const query = {};
+          const cursor = servicesCollection.find(query);
+          const services = await cursor.toArray();
+          res.send(services);
+        })
     }
     finally{
+
 
     }
 }
 run().catch(err=> {
-    console.log(error)
+    console.log(err)
 });
-
-
 
 
 
