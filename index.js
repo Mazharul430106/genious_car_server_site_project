@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 app.use(cors());
@@ -16,13 +16,22 @@ const run = async ()=>{
         const productCollection = client.db('geniousCarDb').collection('products');
         const servicesCollection = client.db('geniousCarDb').collection('services');
 
-        // get data from database
+        // get all Services data from database
         app.get('/services', async (req, res)=>{
           const query = {};
           const cursor = servicesCollection.find(query);
           const services = await cursor.toArray();
           res.send(services);
         })
+
+        // get one services data from database
+        app.get('/services/:id', async (req, res)=>{
+          const id = req.params.id;
+          const query = {_id: ObjectId(id)};
+          const selectedService = await servicesCollection.findOne(query);
+          res.send(selectedService);
+        })
+
     }
     finally{
 
