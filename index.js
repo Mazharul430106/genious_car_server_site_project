@@ -20,7 +20,9 @@ const run = async ()=>{
 
     }
 }
-run().catch(err=> console.log(error));
+run().catch(err=> {
+    console.log(error)
+});
 
 
 
